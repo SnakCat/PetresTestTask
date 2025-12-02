@@ -20,12 +20,17 @@ final class PostViewModel: PostViewModelProtocol {
     
     //MARK: - свойства
     private(set) var posts: [Posts] = []
+    private let storage = PostsStorage()
 
     var onPostsUpdated: (() -> Void)?
     var onError: ((String) -> Void)?
     
     //MARK: - метод запроса постов по API
     func fetchPosts() {
+        let saved = storage.fetchPosts()
+        if !saved.isEmpty {
+            onPostsUpdated?()
+        }
         NetworkManager.shared.getPosts { [weak self] result in
             switch result {
             case .success(let postResponses):
@@ -49,11 +54,17 @@ final class PostViewModel: PostViewModelProtocol {
                 switch result {
                 case .success(let data):
                     fullPosts.append(
-                        Posts(id: post.id, title: post.title, body: post.body, avatar: data)
+                        Posts(id: post.id,
+                              title: post.title,
+                              body: post.body,
+                              avatar: data)
                     )
                 case .failure:
                     fullPosts.append(
-                        Posts(id: post.id, title: post.title, body: post.body, avatar: Data())
+                        Posts(id: post.id,
+                              title: post.title,
+                              body: post.body,
+                              avatar: Data())
                     )
                 }
                 group.leave()
@@ -62,6 +73,7 @@ final class PostViewModel: PostViewModelProtocol {
         
         group.notify(queue: .main) { [weak self] in
             self?.posts = fullPosts
+            self?.storage.savePosts(fullPosts)
             self?.onPostsUpdated?()
         }
     }
