@@ -7,6 +7,7 @@
 
 import Foundation
 
+//MARK: - протокол для ViewModel
 protocol PostViewModelProtocol {
     var posts: [Posts] { get }
     var onPostsUpdated: (() -> Void)? { get set }
@@ -17,11 +18,13 @@ protocol PostViewModelProtocol {
 
 final class PostViewModel: PostViewModelProtocol {
     
+    //MARK: - свойства
     private(set) var posts: [Posts] = []
 
     var onPostsUpdated: (() -> Void)?
     var onError: ((String) -> Void)?
     
+    //MARK: - метод запроса постов по API
     func fetchPosts() {
         NetworkManager.shared.getPosts { [weak self] result in
             switch result {
@@ -33,7 +36,8 @@ final class PostViewModel: PostViewModelProtocol {
             }
         }
     }
-
+    
+    //MARK: - метод добавления аватарки к посту через GCD 
     private func mapPostsWithAvatars(_ posts: [PostResponse]) {
         var fullPosts: [Posts] = []
         let group = DispatchGroup()

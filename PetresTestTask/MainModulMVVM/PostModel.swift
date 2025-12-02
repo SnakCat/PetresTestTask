@@ -7,12 +7,14 @@
 
 import Foundation
 
+    //MARK: - модель для поста без аватарки
 struct PostResponse: Decodable {
     let id: Int
     let title: String
     let body: String
 }
 
+    //MARK: - модель поста для UI с аватаркой
 struct Posts {
     let id: Int
     let title: String

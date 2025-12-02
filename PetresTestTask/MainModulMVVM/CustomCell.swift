@@ -9,11 +9,13 @@ import UIKit
 
 final class CustomCell: UITableViewCell {
     
+    //MARK: - свойства
     private let conteinerViwe = UIView()
     private let titleLabel = UILabel()
     private let bodyLabel = UILabel()
     private let avatarImage = UIImageView()
     
+    //MARK: - жизненный цикл
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubView()
@@ -24,11 +26,13 @@ final class CustomCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: - метод добавление на view элементов
     private func addSubView() {
         contentView.addSubview(conteinerViwe)
         conteinerViwe.addSubviews(titleLabel, bodyLabel, avatarImage)
     }
     
+    //MARK: - метод выставление констрейнтов
     private func setupConstraints() {
         conteinerViwe.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -57,6 +61,7 @@ final class CustomCell: UITableViewCell {
         ])
     }
     
+    //MARK: - метод для настройки UI
     private func setupUI() {
         titleLabel.numberOfLines = .zero
         titleLabel.font = .boldSystemFont(ofSize: 16)
@@ -66,6 +71,7 @@ final class CustomCell: UITableViewCell {
         avatarImage.contentMode = .scaleAspectFill
     }
     
+    //MARK: - метод для конфигурации ячейки
     func configuretorTableViewCell(post: Posts) {
         titleLabel.text = post.title
         bodyLabel.text = post.body

@@ -10,9 +10,11 @@ import Foundation
 
 final class NetworkManager {
     
+    //MARK: - синглтон
     static let shared = NetworkManager()
     private init() {}
     
+    //MARK: - URL
     enum Constants {
         static let baseURL = "https://jsonplaceholder.typicode.com"
         static let imageURL = "https://picsum.photos/100"
@@ -22,6 +24,7 @@ final class NetworkManager {
         static let posts = "/posts"
     }
     
+    //MARK: - метод запроса поста
     func getPosts(completion: @escaping(Result<[PostResponse], RequestError>) -> Void) {
         AF.request(Constants.baseURL + EndPoint.posts)
             .validate(statusCode: 200..<300)
@@ -35,6 +38,7 @@ final class NetworkManager {
             }
     }
     
+    //MARK: - метод запроса аватарки
     func getRandomAvatar(completion: @escaping (Result<Data, RequestError>) -> Void) {
         AF.request(Constants.imageURL)
             .validate(statusCode: 200..<300)

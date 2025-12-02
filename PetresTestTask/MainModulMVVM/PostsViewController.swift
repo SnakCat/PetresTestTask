@@ -9,9 +9,11 @@ import UIKit
 
 final class PostsViewController: UIViewController {
     
+    //MARK: - свойства
     private let tableView = UITableView()
     private var viewModel: PostViewModelProtocol = PostViewModel()
     
+    //MARK: - жизненный кицл
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
@@ -23,6 +25,7 @@ final class PostsViewController: UIViewController {
         viewModel.fetchPosts()
     }
     
+    //MARK: - настройка таблицы
     private func setupTableView() {
         view.addSubview(tableView)
         tableView.frame = view.bounds
@@ -31,6 +34,7 @@ final class PostsViewController: UIViewController {
         tableView.delegate = self
     }
     
+    //MARK: - метод соединения viewModel и ViewController
     private func bindViewModel() {
         viewModel.onPostsUpdated = { [weak self] in
             DispatchQueue.main.async {
@@ -40,6 +44,7 @@ final class PostsViewController: UIViewController {
     }
 }
 
+    //MARK: - расширение для методов таблицы
 extension PostsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         viewModel.posts.count

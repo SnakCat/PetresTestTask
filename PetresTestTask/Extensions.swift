@@ -7,6 +7,7 @@
 
 import UIKit
 
+//MARK: - расширение для добавления на View
 extension UIView {
     func addSubviews(_ view: UIView...) {
         view.forEach(addSubview)
