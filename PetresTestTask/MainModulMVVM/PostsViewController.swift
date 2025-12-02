@@ -12,12 +12,14 @@ final class PostsViewController: UIViewController {
     //MARK: - свойства
     private let tableView = UITableView()
     private var viewModel: PostViewModelProtocol = PostViewModel()
+    private let refreshControl = UIRefreshControl()
     
     //MARK: - жизненный кицл
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
         bindViewModel()
+        setupRefreshControl()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -39,8 +41,20 @@ final class PostsViewController: UIViewController {
         viewModel.onPostsUpdated = { [weak self] in
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
+                self?.refreshControl.endRefreshing()
             }
         }
+    }
+    
+    //MARK: - матод обработки ленты жестом
+    private func setupRefreshControl() {
+        refreshControl.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
+        tableView.refreshControl = refreshControl
+    }
+    
+    // селектор обработки жеста
+    @objc private func didPullToRefresh() {
+        viewModel.fetchPosts()
     }
 }
 
