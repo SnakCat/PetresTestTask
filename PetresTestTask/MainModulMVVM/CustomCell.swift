@@ -12,6 +12,7 @@ final class CustomCell: UITableViewCell {
     private let conteinerViwe = UIView()
     private let titleLabel = UILabel()
     private let bodyLabel = UILabel()
+    private let avatarImage = UIImageView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -25,13 +26,14 @@ final class CustomCell: UITableViewCell {
     
     private func addSubView() {
         contentView.addSubview(conteinerViwe)
-        conteinerViwe.addSubviews(titleLabel, bodyLabel)
+        conteinerViwe.addSubviews(titleLabel, bodyLabel, avatarImage)
     }
     
     private func setupConstraints() {
         conteinerViwe.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         bodyLabel.translatesAutoresizingMaskIntoConstraints = false
+        avatarImage.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             conteinerViwe.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
@@ -39,24 +41,34 @@ final class CustomCell: UITableViewCell {
             conteinerViwe.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             conteinerViwe.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
             
-            titleLabel.topAnchor.constraint(equalTo: conteinerViwe.topAnchor, constant: 10),
-            titleLabel.leadingAnchor.constraint(equalTo: conteinerViwe.leadingAnchor, constant: 10),
+            titleLabel.topAnchor.constraint(equalTo: conteinerViwe.topAnchor, constant: 16),
+            titleLabel.leadingAnchor.constraint(equalTo: avatarImage.trailingAnchor, constant: 10),
             titleLabel.trailingAnchor.constraint(equalTo: conteinerViwe.trailingAnchor, constant: -10),
             
-            bodyLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
+            bodyLabel.topAnchor.constraint(equalTo: avatarImage.bottomAnchor, constant: 16),
             bodyLabel.leadingAnchor.constraint(equalTo: conteinerViwe.leadingAnchor, constant: 10),
             bodyLabel.trailingAnchor.constraint(equalTo: conteinerViwe.trailingAnchor, constant: -10),
-            bodyLabel.bottomAnchor.constraint(equalTo: conteinerViwe.bottomAnchor, constant: -10)
+            bodyLabel.bottomAnchor.constraint(equalTo: conteinerViwe.bottomAnchor, constant: -10),
+            
+            avatarImage.topAnchor.constraint(equalTo: conteinerViwe.topAnchor, constant: 6),
+            avatarImage.leadingAnchor.constraint(equalTo: conteinerViwe.leadingAnchor, constant: 10),
+            avatarImage.heightAnchor.constraint(equalToConstant: 60),
+            avatarImage.widthAnchor.constraint(equalToConstant: 60)
         ])
     }
     
     private func setupUI() {
         titleLabel.numberOfLines = .zero
+        titleLabel.font = .boldSystemFont(ofSize: 16)
         bodyLabel.numberOfLines = .zero
+        avatarImage.layer.cornerRadius = 30
+        avatarImage.clipsToBounds = true
+        avatarImage.contentMode = .scaleAspectFill
     }
     
     func configuretorTableViewCell(post: Posts) {
         titleLabel.text = post.title
         bodyLabel.text = post.body
+        avatarImage.image = UIImage(data: post.avatar)
     }
 }

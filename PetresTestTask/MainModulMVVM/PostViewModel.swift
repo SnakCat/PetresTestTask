@@ -25,12 +25,40 @@ final class PostViewModel: PostViewModelProtocol {
     func fetchPosts() {
         NetworkManager.shared.getPosts { [weak self] result in
             switch result {
-            case .success(let posts):
-                self?.posts = posts
-                self?.onPostsUpdated?()
+            case .success(let postResponses):
+                self?.mapPostsWithAvatars(postResponses)
+
             case .failure(let error):
                 self?.onError?(error.localizedDescription)
             }
+        }
+    }
+
+    private func mapPostsWithAvatars(_ posts: [PostResponse]) {
+        var fullPosts: [Posts] = []
+        let group = DispatchGroup()
+        
+        for post in posts {
+            group.enter()
+            
+            NetworkManager.shared.getRandomAvatar { result in
+                switch result {
+                case .success(let data):
+                    fullPosts.append(
+                        Posts(id: post.id, title: post.title, body: post.body, avatar: data)
+                    )
+                case .failure:
+                    fullPosts.append(
+                        Posts(id: post.id, title: post.title, body: post.body, avatar: Data())
+                    )
+                }
+                group.leave()
+            }
+        }
+        
+        group.notify(queue: .main) { [weak self] in
+            self?.posts = fullPosts
+            self?.onPostsUpdated?()
         }
     }
 }
